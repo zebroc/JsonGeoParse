@@ -13,14 +13,41 @@ public class Main {
     private static final double radius = 380000;
 
     public static void main(String[] args) throws Exception {
-        if (args[0] != null) {
-            showPlacesNearby(args[0]);
-        } else {
-            System.err.println("Please provide filename.");
+        if (args.length >= 2)
+            if (args[0] != null && args[0].equalsIgnoreCase("hotels")) {
+                showHotelsNearby(args[1]);
+            } else if (args[0] != null && args[0].equalsIgnoreCase("gasstations")) {
+                showGasStationsNearby(args[1]);
+            } else {
+                System.err.println("Please provide filename.");
+            }
+    }
+
+    private static void showGasStationsNearby(String filename) {
+        Type REVIEW_TYPE = new TypeToken<List<GasStation>>() {
+        }.getType();
+
+        Gson gson = new Gson();
+
+        JsonReader reader = null;
+        try {
+            reader = new JsonReader(new FileReader(filename));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        List<GasStation> data = gson.fromJson(reader, REVIEW_TYPE);
+
+        for (GasStation gasStation : data) {
+            if (distance(centerLat, centerLng,
+                    gasStation.getLatitude(), gasStation.getLongitude(), 0, 0) < radius) {
+                System.out.println(gson.toJson(gasStation));
+            }
         }
     }
 
-    private static void showPlacesNearby(String filename) {
+
+    private static void showHotelsNearby(String filename) {
         Type REVIEW_TYPE = new TypeToken<List<Hotel>>() {
         }.getType();
 

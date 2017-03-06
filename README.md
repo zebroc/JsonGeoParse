@@ -5,7 +5,7 @@ of yet
 
 To compile run:
 
-clean compile assembly:single
+mvn clean compile assembly:single
 
 And then run like:
 
